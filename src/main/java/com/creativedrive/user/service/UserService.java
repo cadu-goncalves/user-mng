@@ -2,6 +2,7 @@ package com.creativedrive.user.service;
 
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.domain.UserException;
+import com.creativedrive.user.domain.UserRole;
 import com.creativedrive.user.persistence.UserRepository;
 import com.creativedrive.user.utils.MessageUtils;
 import org.jasypt.util.password.PasswordEncryptor;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -37,7 +39,7 @@ public class UserService {
      * @param user {@link User} entity to create
      * @return {@link CompletableFuture<User>}
      */
-    // @Secured(UserRole.ADMIN)
+    @Secured(UserRole.ADMIN)
     public CompletableFuture<User> create(final User user) {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Create user: " + user.getName());
@@ -56,7 +58,7 @@ public class UserService {
      * @return {@link CompletableFuture<User>}
      * @throws UserException if informed user id not macth database value
      */
-    // @Secured(UserRole.ADMIN)
+    @Secured(UserRole.ADMIN)
     public CompletableFuture<User> update(final User user) {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Update user: " + user.getName());
@@ -95,7 +97,7 @@ public class UserService {
      * @return {@link CompletableFuture<Void>}
      * @throws UserException if user try to remove itself
      */
-    // @Secured(UserRole.ADMIN)
+    @Secured(UserRole.ADMIN)
     public CompletableFuture<Void> delete(final String user, final String caller) {
         return CompletableFuture.runAsync(() -> {
             LOGGER.info("Delete user: " + user);

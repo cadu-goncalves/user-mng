@@ -2,6 +2,7 @@ package com.creativedrive.user.service;
 
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.domain.UserException;
+import com.creativedrive.user.domain.UserRole;
 import com.creativedrive.user.persistence.UserRepository;
 import org.jasypt.util.password.PasswordEncryptor;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -59,6 +61,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
+    @WithMockUser(authorities = {UserRole.ADMIN})
     public void itCreateUsers() throws Exception {
         // Mock behaviours
         when(mockEncryptor.encryptPassword(user.getPassword())).thenReturn("encrypted_password");
@@ -79,6 +82,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
+    @WithMockUser(authorities = {UserRole.ADMIN})
     public void itUpdateUsersKeepingCurrentPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -102,6 +106,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
+    @WithMockUser(authorities = {UserRole.ADMIN})
     public void itUpdateUsersEncryptingNewPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -126,6 +131,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
+    @WithMockUser(authorities = {UserRole.ADMIN})
     public void itDenyUpdateIfUserIdNotValid() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
