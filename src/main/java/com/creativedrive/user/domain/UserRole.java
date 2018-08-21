@@ -3,6 +3,9 @@ package com.creativedrive.user.domain;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * User roles
+ */
 public final class UserRole {
 
     /** String constants */

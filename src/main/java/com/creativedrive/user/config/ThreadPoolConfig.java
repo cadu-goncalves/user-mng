@@ -8,6 +8,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Bootstrap thread pool features.
+ */
 @Configuration
 public class ThreadPoolConfig {
 
