@@ -78,6 +78,47 @@ public class UserServiceTest {
     }
 
     /**
+     * Test scenario where user is retrieved
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(authorities = {UserProfile.USER})
+    public void itRetrievesUsers() throws Exception {
+        // Mock behaviours
+        when(mockRepo.findByName(user.getName())).thenReturn(Optional.of(user));
+
+        // Test
+        User result = userService.retrieve(user.getName()).get();
+        assertThat(result, equalTo(user));
+
+        // Check mock iteration
+        verify(mockRepo, only()).findByName(user.getName());
+    }
+
+    /**
+     * Test scenario where user is retrieved but not exists
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(authorities = {UserProfile.USER})
+    public void itThrowsIfRetrieveFails() throws Exception {
+        // Mock behaviours
+        when(mockRepo.findByName(user.getName())).thenReturn(Optional.empty());
+
+        // Test (must throw exception)
+        try {
+            userService.retrieve(user.getName()).get();
+        } catch (Exception e) {
+            if (!(e.getCause() instanceof UserException)) {
+                Assert.fail();
+            }
+        }
+    }
+
+
+    /**
      * Test scenario where user password is not changed
      *
      * @throws Exception
@@ -128,7 +169,6 @@ public class UserServiceTest {
 
     /**
      * Test scenario where user id not matches provided user
-     *
      */
     @Test
     @WithMockUser(authorities = {UserProfile.ADMIN})
@@ -143,8 +183,8 @@ public class UserServiceTest {
         // Test (must throw exception)
         try {
             userService.update(user).get();
-        }catch(Exception e) {
-            if(!(e.getCause() instanceof UserException)) {
+        } catch (Exception e) {
+            if (!(e.getCause() instanceof UserException)) {
                 Assert.fail();
             }
         }
@@ -156,7 +196,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(value="root", authorities = {UserProfile.ADMIN})
+    @WithMockUser(value = "root", authorities = {UserProfile.ADMIN})
     public void itDeletesUsers() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);

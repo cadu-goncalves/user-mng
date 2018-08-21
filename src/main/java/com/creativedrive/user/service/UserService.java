@@ -53,11 +53,35 @@ public class UserService {
     }
 
     /**
+     * Retrieve existing user
+     *
+     * @param userName {@link String} User name to retrieve
+     * @return {@link CompletableFuture<User>}
+     * @throws UserException if no matches found for {@link User#getName()}
+     */
+    @Secured({UserProfile.ADMIN, UserProfile.USER})
+    public CompletableFuture<User> retrieve(final String userName) {
+        return CompletableFuture.supplyAsync(() -> {
+            LOGGER.info("Retrieve user: " + userName);
+
+            // Encrypt password and save
+            Optional<User> findResult = userRepo.findByName(userName);
+            if (!findResult.isPresent()) {
+                // Not found
+                String message = MessageUtils.getMessage("messages", "user.notfound");
+                throw new UserException(message);
+            }
+
+            return findResult.get();
+        }, executor);
+    }
+
+    /**
      * Update existing user
      *
      * @param user {@link User} entity to update
      * @return {@link CompletableFuture<User>}
-     * @throws UserException if informed user id not macth database value
+     * @throws UserException if {@link User#equals(Object)} not matches database value
      */
     @Secured(UserProfile.ADMIN)
     public CompletableFuture<User> update(final User user) {
@@ -66,20 +90,20 @@ public class UserService {
 
             // Check sensitive data
             Optional<User> findResult = userRepo.findByName(user.getName());
-            if(!findResult.isPresent()) {
+            if (!findResult.isPresent()) {
                 // Not found
-                String message = MessageUtils.getMessage("messages", "user.update.notfound");
+                String message = MessageUtils.getMessage("messages", "user.notfound");
                 throw new UserException(message);
             }
 
             User currentUser = findResult.get();
-            if(!currentUser.equals(user)) {
+            if (!currentUser.equals(user)) {
                 // Wrong id
                 String message = MessageUtils.getMessage("messages", "user.update.denied");
                 throw new UserException(message);
             }
 
-            if(!user.getPassword().equals(currentUser.getPassword())) {
+            if (!user.getPassword().equals(currentUser.getPassword())) {
                 // Password changed, encrypt
                 user.setPassword(encryptor.encryptPassword(user.getPassword()));
             }
@@ -91,20 +115,20 @@ public class UserService {
 
     /**
      * Delete existing user.
-     *
+     * <p>
      * For security reasons an user cannot remove itself
      *
-     * @param user {@link User} entity to remove
+     * @param userName {@link String} {@link User#getName()} to remove
      * @return {@link CompletableFuture<Void>}
      */
     @Secured(UserProfile.ADMIN)
-    @PreAuthorize("#user != authentication.name")
-    public CompletableFuture<Void> delete(final String user) {
+    @PreAuthorize("#userName != authentication.name")
+    public CompletableFuture<Void> delete(final String userName) {
         return CompletableFuture.runAsync(() -> {
-            LOGGER.info("Delete user: " + user);
+            LOGGER.info("Delete user: " + userName);
 
-            Optional<User> findResult = userRepo.findByName(user);
-            if(findResult.isPresent()) {
+            Optional<User> findResult = userRepo.findByName(userName);
+            if (findResult.isPresent()) {
                 userRepo.delete(findResult.get());
             }
         }, executor);
