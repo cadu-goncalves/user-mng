@@ -2,7 +2,7 @@ package com.creativedrive.user.service;
 
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.domain.UserException;
-import com.creativedrive.user.domain.UserRole;
+import com.creativedrive.user.domain.UserProfile;
 import com.creativedrive.user.persistence.UserRepository;
 import com.creativedrive.user.utils.MessageUtils;
 import org.jasypt.util.password.PasswordEncryptor;
@@ -40,7 +40,7 @@ public class UserService {
      * @param user {@link User} entity to create
      * @return {@link CompletableFuture<User>}
      */
-    @Secured(UserRole.ADMIN)
+    @Secured(UserProfile.ADMIN)
     public CompletableFuture<User> create(final User user) {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Create user: " + user.getName());
@@ -59,7 +59,7 @@ public class UserService {
      * @return {@link CompletableFuture<User>}
      * @throws UserException if informed user id not macth database value
      */
-    @Secured(UserRole.ADMIN)
+    @Secured(UserProfile.ADMIN)
     public CompletableFuture<User> update(final User user) {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Update user: " + user.getName());
@@ -97,7 +97,7 @@ public class UserService {
      * @param user {@link User} entity to remove
      * @return {@link CompletableFuture<Void>}
      */
-    @Secured(UserRole.ADMIN)
+    @Secured(UserProfile.ADMIN)
     @PreAuthorize("#user != authentication.name")
     public CompletableFuture<Void> delete(final String user) {
         return CompletableFuture.runAsync(() -> {

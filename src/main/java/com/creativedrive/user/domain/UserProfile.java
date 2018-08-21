@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * User roles
+ * User profiles
  */
-public final class UserRole {
+public final class UserProfile {
 
     /** String constants */
     public static final String ADMIN = "ADMIN";

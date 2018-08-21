@@ -4,13 +4,13 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * Annotation for user role validation
+ * Annotation for user profile validation
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Role {
-    String message() default "User role is not valid";
+public @interface IsUserProfile {
+    String message() default "User profile is not valid";
 
     Class<?>[] groups() default { };
 

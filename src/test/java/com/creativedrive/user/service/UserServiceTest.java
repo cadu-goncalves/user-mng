@@ -2,7 +2,7 @@ package com.creativedrive.user.service;
 
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.domain.UserException;
-import com.creativedrive.user.domain.UserRole;
+import com.creativedrive.user.domain.UserProfile;
 import com.creativedrive.user.persistence.UserRepository;
 import org.jasypt.util.password.PasswordEncryptor;
 import org.junit.Assert;
@@ -62,7 +62,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(authorities = {UserRole.ADMIN})
+    @WithMockUser(authorities = {UserProfile.ADMIN})
     public void itCreatesUsers() throws Exception {
         // Mock behaviours
         when(mockEncryptor.encryptPassword(user.getPassword())).thenReturn("encrypted_password");
@@ -83,7 +83,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(authorities = {UserRole.ADMIN})
+    @WithMockUser(authorities = {UserProfile.ADMIN})
     public void itUpdatesUsersKeepingCurrentPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -107,7 +107,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(authorities = {UserRole.ADMIN})
+    @WithMockUser(authorities = {UserProfile.ADMIN})
     public void itUpdatesUsersEncryptingNewPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -131,7 +131,7 @@ public class UserServiceTest {
      *
      */
     @Test
-    @WithMockUser(authorities = {UserRole.ADMIN})
+    @WithMockUser(authorities = {UserProfile.ADMIN})
     public void itDeniesUpdateIfUserIdNotValid() {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -156,7 +156,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(value="root", authorities = {UserRole.ADMIN})
+    @WithMockUser(value="root", authorities = {UserProfile.ADMIN})
     public void itDeletesUsers() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
@@ -177,7 +177,7 @@ public class UserServiceTest {
      * @throws Exception
      */
     @Test(expected = AccessDeniedException.class)
-    @WithMockUser(authorities = {UserRole.ADMIN})
+    @WithMockUser(authorities = {UserProfile.ADMIN})
     public void itDeniesUsersFromSelfDeleting() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);

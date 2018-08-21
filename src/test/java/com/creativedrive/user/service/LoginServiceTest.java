@@ -41,7 +41,7 @@ public class LoginServiceTest {
         // User fixture
         user = new User();
         user.setId("111");
-        user.setRole("ADMIN");
+        user.setProfile("ADMIN");
         user.setName("user");
         user.setPassword("password");
         user.setEmail("user@email.com");
@@ -67,7 +67,7 @@ public class LoginServiceTest {
         // Test
         Optional<User> data = loginService.checkAuth(user.getName(), user.getPassword());
         assertThat(data.isPresent(), is(true));
-        assertThat(data.get().getRole(), equalTo(user.getRole()));
+        assertThat(data.get().getProfile(), equalTo(user.getProfile()));
 
         // Check mock iteration
         verify(mockEncryptor).encryptPassword(user.getPassword());

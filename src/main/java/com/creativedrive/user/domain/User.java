@@ -1,6 +1,6 @@
 package com.creativedrive.user.domain;
 
-import com.creativedrive.user.domain.validation.Role;
+import com.creativedrive.user.domain.validation.IsUserProfile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,8 +22,8 @@ public final class User {
     private String id;
 
     @Field
-    @Role(message = "{user.role.value}")
-    private String role;
+    @IsUserProfile(message = "{user.profile.value}")
+    private String profile;
 
     @Field
     @Indexed(unique = true)
@@ -50,10 +50,6 @@ public final class User {
     @Pattern(regexp = "^\\d{8,10}$", message = "{user.phone.format}")
     private String phone;
 
-    @Field
-    @Max(value = 255, message = "{user.profile.size}")
-    private String profile;
-
     public String getId() {
         return id;
     }
@@ -62,12 +58,12 @@ public final class User {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public String getProfile() {
+        return profile;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     public String getName() {
@@ -108,14 +104,6 @@ public final class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
     }
 
     @Override

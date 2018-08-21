@@ -54,9 +54,9 @@ public class AuthProvider implements AuthenticationProvider {
             Optional<User> user = loginService.checkAuth(username, password);
             if(user.isPresent()){
                 // Granted
-                String role = user.get().getRole();
+                String auth = user.get().getProfile();
                 return new UsernamePasswordAuthenticationToken(username, password,
-                        AuthorityUtils.createAuthorityList(role));
+                        AuthorityUtils.createAuthorityList(auth));
 
             } else {
                 // Denied
