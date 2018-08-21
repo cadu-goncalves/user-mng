@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -148,5 +149,44 @@ public class UserServiceTest {
                 Assert.fail();
             }
         }
+    }
+
+    /**
+     * Test scenario where user is deleted by other user
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(value="root", authorities = {UserRole.ADMIN})
+    public void itDeleteUsers() throws Exception {
+        User storedUser = new User();
+        BeanUtils.copyProperties(user, storedUser);
+
+        //  Mock behaviours
+        when(mockRepo.findByName("user")).thenReturn(Optional.of(storedUser));
+
+        // Test
+        userService.delete("user").get();
+
+        // Check mock iteration
+        verify(mockRepo).delete(user);
+    }
+
+    /**
+     * Test scenario where user try to deleted itself
+     *
+     * @throws Exception
+     */
+    @Test(expected = AccessDeniedException.class)
+    @WithMockUser(authorities = {UserRole.ADMIN})
+    public void itDenyUsersFromSelfDeleting() throws Exception {
+        User storedUser = new User();
+        BeanUtils.copyProperties(user, storedUser);
+
+        //  Mock behaviours
+        when(mockRepo.findByName("user")).thenReturn(Optional.of(storedUser));
+
+        // Test (must throw exception)
+        userService.delete("user").get();
     }
 }

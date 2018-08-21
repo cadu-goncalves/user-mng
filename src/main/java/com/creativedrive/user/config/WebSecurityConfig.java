@@ -29,7 +29,7 @@ import java.util.Map;
  * Bootstrap security configurations.
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends GlobalMethodSecurityConfiguration {
 
     private AnnotationAttributes enableMethodSecurity;

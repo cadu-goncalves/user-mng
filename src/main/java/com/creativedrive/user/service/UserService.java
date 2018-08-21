@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -92,23 +93,17 @@ public class UserService {
     /**
      * Delete existing user.
      *
+     * For security reasons an user cannot remove itself
+     *
      * @param user {@link User} entity to remove
-     * @param caller Name of user calling the operation
      * @return {@link CompletableFuture<Void>}
-     * @throws UserException if user try to remove itself
      */
     @Secured(UserRole.ADMIN)
-    public CompletableFuture<Void> delete(final String user, final String caller) {
+    @PreAuthorize("#user != authentication.name")
+    public CompletableFuture<Void> delete(final String user) {
         return CompletableFuture.runAsync(() -> {
             LOGGER.info("Delete user: " + user);
 
-            // For safety reasons an user cannot remove itself, so check first
-            if(caller.equals(user)) {
-                String message = MessageUtils.getMessage("messages", "user.autoremove.denied");
-                throw new UserException(message);
-            }
-
-            // Proceed
             Optional<User> findResult = userRepo.findByName(user);
             if(findResult.isPresent()) {
                 userRepo.delete(findResult.get());
