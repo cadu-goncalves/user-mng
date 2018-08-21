@@ -40,9 +40,11 @@ public class UserRepositoryTest {
 
     /**
      * Test findByName query
+     *
+     * @throws Exception
      */
     @Test
-    public void itFindByName() {
+    public void itFindsByName() throws Exception {
         // Save arbitrary user
         repository.save(user);
 
@@ -58,9 +60,11 @@ public class UserRepositoryTest {
 
     /**
      * Test checkAuth query
+     *
+     * @throws Exception
      */
     @Test
-    public void itCheckAuth() {
+    public void itChecksAuth() throws Exception {
         // Save arbitrary user
         repository.save(user);
 

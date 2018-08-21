@@ -63,7 +63,7 @@ public class UserServiceTest {
      */
     @Test
     @WithMockUser(authorities = {UserRole.ADMIN})
-    public void itCreateUsers() throws Exception {
+    public void itCreatesUsers() throws Exception {
         // Mock behaviours
         when(mockEncryptor.encryptPassword(user.getPassword())).thenReturn("encrypted_password");
         when(mockRepo.save(user)).thenReturn(user);
@@ -84,7 +84,7 @@ public class UserServiceTest {
      */
     @Test
     @WithMockUser(authorities = {UserRole.ADMIN})
-    public void itUpdateUsersKeepingCurrentPassword() throws Exception {
+    public void itUpdatesUsersKeepingCurrentPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
 
@@ -108,7 +108,7 @@ public class UserServiceTest {
      */
     @Test
     @WithMockUser(authorities = {UserRole.ADMIN})
-    public void itUpdateUsersEncryptingNewPassword() throws Exception {
+    public void itUpdatesUsersEncryptingNewPassword() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
         storedUser.setPassword("encrypted_password");
@@ -129,11 +129,10 @@ public class UserServiceTest {
     /**
      * Test scenario where user id not matches provided user
      *
-     * @throws Exception
      */
     @Test
     @WithMockUser(authorities = {UserRole.ADMIN})
-    public void itDenyUpdateIfUserIdNotValid() throws Exception {
+    public void itDeniesUpdateIfUserIdNotValid() {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
         storedUser.setId("xxxxx");
@@ -158,7 +157,7 @@ public class UserServiceTest {
      */
     @Test
     @WithMockUser(value="root", authorities = {UserRole.ADMIN})
-    public void itDeleteUsers() throws Exception {
+    public void itDeletesUsers() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
 
@@ -179,7 +178,7 @@ public class UserServiceTest {
      */
     @Test(expected = AccessDeniedException.class)
     @WithMockUser(authorities = {UserRole.ADMIN})
-    public void itDenyUsersFromSelfDeleting() throws Exception {
+    public void itDeniesUsersFromSelfDeleting() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
 
