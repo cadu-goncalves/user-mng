@@ -64,9 +64,8 @@ public class UserService {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Update user: " + user.getName());
 
-            // Check sentifive data
+            // Check sensitive data
             Optional<User> findResult = userRepo.findByName(user.getName());
-
             if(!findResult.isPresent()) {
                 // Not found
                 String message = MessageUtils.getMessage("messages", "user.update.notfound");
