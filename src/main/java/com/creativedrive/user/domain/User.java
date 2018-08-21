@@ -1,6 +1,8 @@
 package com.creativedrive.user.domain;
 
+import com.creativedrive.user.domain.validation.Role;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -20,28 +22,36 @@ public final class User {
     private String id;
 
     @Field
-    @NotNull
+    @Role(message = "{user.role.value}")
+    private String role;
+
+    @Field
+    @Indexed(unique = true)
+    @NotBlank(message = "{user.name.null}")
+    @Size(min = 5, max = 25, message = "{user.name.size}")
     private String name;
 
     @Field
-    @Email
+    @Indexed(unique = true)
+    @NotBlank(message = "{user.email.null}")
+    @Email(message = "{user.email.format}")
     private String email;
 
     @Field
-    @NotNull
-    @Size(min = 6, max = 20)
+    @NotBlank(message = "{user.password.null}")
+    @Size(min = 6, max = 20, message = "{user.password.size}")
     private String password;
 
     @Field
-    @Max(255)
+    @Max(value = 255, message = "{user.address.size}")
     private String address;
 
     @Field
-    @Pattern(regexp = "^\\d{8,10}$")
+    @Pattern(regexp = "^\\d{8,10}$", message = "{user.phone.format}")
     private String phone;
 
     @Field
-    @Max(255)
+    @Max(value = 255, message = "{user.profile.size}")
     private String profile;
 
     public String getId() {
@@ -50,6 +60,14 @@ public final class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getName() {
