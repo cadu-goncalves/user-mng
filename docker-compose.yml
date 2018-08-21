@@ -4,5 +4,3 @@ user-mng-db:
   image: mongo:4.0.1-xenial
   ports:
     - 27017:27017
-  volumes:
-    - user-mng-db:/data/db

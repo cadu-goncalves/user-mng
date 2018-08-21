@@ -21,6 +21,10 @@ public class MongoDBConfig extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
+        // TODO: Check connection pool requirements
+        // final MongoClientOptions options = MongoClientOptions.builder()
+        // .connectionsPerHost()
+
         return new MongoClient(properties.getHost(), properties.getPort());
     }
 
