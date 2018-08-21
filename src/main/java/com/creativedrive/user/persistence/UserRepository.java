@@ -19,6 +19,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
     Optional<User> findByName(String name);
 
     @Query(value = "{ $and : [ { 'name' : ?0 }, { 'password' : ?1} ] }" )
-    User checkAuth(String name, String password);
+    Optional<User> checkAuth(String name, String password);
 
 }
