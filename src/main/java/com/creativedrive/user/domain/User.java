@@ -14,7 +14,7 @@ import java.util.Objects;
  *
  * @see https://docs.spring.io/spring-data/mongodb/docs/2.0.9.RELEASE/reference/html/#mapping-chapter
  */
-@Document
+@Document(collection = "users")
 public final class User {
 
     // Binds to '_id' https://docs.mongodb.com/manual/reference/method/ObjectId/
@@ -39,7 +39,7 @@ public final class User {
 
     @Field
     @NotBlank(message = "{user.password.null}")
-    @Size(min = 6, max = 20, message = "{user.password.size}")
+    @Size(min = 6, max = 128, message = "{user.password.size}")
     private String password;
 
     @Field
