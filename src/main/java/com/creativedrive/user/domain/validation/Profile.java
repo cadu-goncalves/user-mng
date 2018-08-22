@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface IsUserProfile {
+public @interface Profile {
     String message() default "User profile is not valid";
 
     Class<?>[] groups() default { };

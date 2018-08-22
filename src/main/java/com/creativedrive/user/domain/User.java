@@ -1,6 +1,6 @@
 package com.creativedrive.user.domain;
 
-import com.creativedrive.user.domain.validation.IsUserProfile;
+import com.creativedrive.user.domain.validation.Profile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,7 +22,7 @@ public final class User {
     private String id;
 
     @Field
-    @IsUserProfile(message = "{user.profile.value}")
+    @Profile(message = "{user.profile.value}")
     private String profile;
 
     @Field
