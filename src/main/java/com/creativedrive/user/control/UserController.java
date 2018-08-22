@@ -1,7 +1,9 @@
 package com.creativedrive.user.control;
 
+import com.creativedrive.user.domain.ApiError;
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.service.UserService;
+import com.creativedrive.user.utils.ApiErrorBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,8 @@ public class UserController {
         future.whenCompleteAsync(
                 (result, throwable) -> {
                     if (throwable != null) {
-                        response.setResult(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+                        ApiError error = ApiErrorBuilder.build(throwable);
+                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.CREATED));
                     }
@@ -58,7 +61,8 @@ public class UserController {
         future.whenCompleteAsync(
                 (result, throwable) -> {
                     if (throwable != null) {
-                        response.setResult(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                         ApiError error = ApiErrorBuilder.build(throwable);
+                         response.setResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.OK));
                     }
@@ -84,7 +88,8 @@ public class UserController {
         future.whenCompleteAsync(
                 (result, throwable) -> {
                     if (throwable != null) {
-                        response.setResult(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
+                        ApiError error = ApiErrorBuilder.build(throwable);
+                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.OK));
                     }
@@ -107,7 +112,8 @@ public class UserController {
         future.whenCompleteAsync(
                 (result, throwable) -> {
                     if (throwable != null) {
-                        response.setResult(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                        ApiError error = ApiErrorBuilder.build(throwable);
+                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(HttpStatus.OK));
                     }

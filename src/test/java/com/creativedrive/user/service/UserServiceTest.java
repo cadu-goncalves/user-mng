@@ -66,6 +66,7 @@ public class UserServiceTest {
     public void itCreatesUsers() throws Exception {
         // Mock behaviours
         when(mockEncryptor.encryptPassword(user.getPassword())).thenReturn("encrypted_password");
+        when(mockRepo.findByName(user.getName())).thenReturn(Optional.empty());
         when(mockRepo.save(user)).thenReturn(user);
 
         // Test
@@ -74,7 +75,30 @@ public class UserServiceTest {
 
         // Check mock iteration
         verify(mockEncryptor).encryptPassword("password");
-        verify(mockRepo, only()).save(user);
+        verify(mockRepo).findByName(user.getName());
+        verify(mockRepo).save(user);
+    }
+
+    /**
+     * Test scenario where a user that already exists is sent to create
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(authorities = {UserProfile.ADMIN})
+    public void itDeniesCreateIfUserRepeated() throws Exception {
+        // Mock behaviours
+        when(mockEncryptor.encryptPassword(user.getPassword())).thenReturn("encrypted_password");
+        when(mockRepo.findByName(user.getName())).thenReturn(Optional.of(user));
+
+        // Test (must throw exception)
+        try {
+            userService.create(user).get();
+        } catch (Exception e) {
+            if (!(e.getCause() instanceof UserException)) {
+                Assert.fail();
+            }
+        }
     }
 
     /**
@@ -103,7 +127,7 @@ public class UserServiceTest {
      */
     @Test
     @WithMockUser(authorities = {UserProfile.USER})
-    public void itThrowsIfRetrieveFails() throws Exception {
+    public void itDeniesRetrieveIfUserNotExist() throws Exception {
         // Mock behaviours
         when(mockRepo.findByName(user.getName())).thenReturn(Optional.empty());
 
@@ -116,7 +140,6 @@ public class UserServiceTest {
             }
         }
     }
-
 
     /**
      * Test scenario where user password is not changed
@@ -218,7 +241,7 @@ public class UserServiceTest {
      */
     @Test(expected = AccessDeniedException.class)
     @WithMockUser(authorities = {UserProfile.ADMIN})
-    public void itDeniesUsersFromSelfDeleting() throws Exception {
+    public void itDeniesDeleteIfSelfDelete() throws Exception {
         User storedUser = new User();
         BeanUtils.copyProperties(user, storedUser);
 

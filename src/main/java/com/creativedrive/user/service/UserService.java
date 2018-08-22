@@ -1,5 +1,6 @@
 package com.creativedrive.user.service;
 
+import com.creativedrive.user.domain.CrudError;
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.domain.UserException;
 import com.creativedrive.user.domain.UserProfile;
@@ -45,6 +46,13 @@ public class UserService {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Create user: " + user.getName());
 
+            Optional<User> findResult = userRepo.findByName(user.getName());
+            if (findResult.isPresent()) {
+                // Already exists
+                String message = MessageUtils.getMessage("messages", "user.create.denied");
+                throw new UserException(message, CrudError.CREATE_ERROR);
+            }
+
             // Encrypt password and save
             user.setPassword(encryptor.encryptPassword(user.getPassword()));
             userRepo.save(user);
@@ -69,7 +77,7 @@ public class UserService {
             if (!findResult.isPresent()) {
                 // Not found
                 String message = MessageUtils.getMessage("messages", "user.notfound");
-                throw new UserException(message);
+                throw new UserException(message, CrudError.RETRIEVE_ERROR);
             }
 
             return findResult.get();
@@ -93,14 +101,14 @@ public class UserService {
             if (!findResult.isPresent()) {
                 // Not found
                 String message = MessageUtils.getMessage("messages", "user.notfound");
-                throw new UserException(message);
+                throw new UserException(message, CrudError.UPDATE_ERROR);
             }
 
             User currentUser = findResult.get();
             if (!currentUser.equals(user)) {
                 // Wrong id
                 String message = MessageUtils.getMessage("messages", "user.update.denied");
-                throw new UserException(message);
+                throw new UserException(message, CrudError.UPDATE_ERROR);
             }
 
             if (!user.getPassword().equals(currentUser.getPassword())) {
@@ -108,6 +116,7 @@ public class UserService {
                 user.setPassword(encryptor.encryptPassword(user.getPassword()));
             }
 
+            // Save
             userRepo.save(user);
             return user;
         }, executor);

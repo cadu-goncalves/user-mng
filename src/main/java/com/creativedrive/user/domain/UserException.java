@@ -5,7 +5,15 @@ package com.creativedrive.user.domain;
  */
 public class UserException extends RuntimeException {
 
-    public UserException(String message) {
+    private CrudError error;
+
+    public UserException(String message, CrudError error) {
         super(message);
+        this.error = error;
     }
+
+    public CrudError getError() {
+        return error;
+    }
+
 }
