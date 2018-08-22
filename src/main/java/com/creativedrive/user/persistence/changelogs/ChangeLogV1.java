@@ -31,7 +31,7 @@ public final class ChangeLogV1 extends AbstractChangeLog {
 
         // Create
         MongoCollection usersCol = jongo.getCollection("users");
-        usersCol.save(root);
+        usersCol.insert(root);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class ChangeLogV1 extends AbstractChangeLog {
 
         // Create
         MongoCollection usersCol = jongo.getCollection("users");
-        usersCol.save(test);
+        usersCol.insert(test);
     }
 }
