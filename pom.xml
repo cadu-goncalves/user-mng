@@ -21,6 +21,7 @@
 
 	<properties>
 		<framework.jasypt.version>1.9.2</framework.jasypt.version>
+		<framework.mongobee.version>0.13</framework.mongobee.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -73,6 +74,13 @@
             <artifactId>jasypt</artifactId>
             <version>${framework.jasypt.version}</version>
         </dependency>
+
+		<!-- Mongobee (Migrations for MongoDB)-->
+		<dependency>
+			<groupId>com.github.mongobee</groupId>
+			<artifactId>mongobee</artifactId>
+			<version>${framework.mongobee.version}</version>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
