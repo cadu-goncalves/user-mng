@@ -50,7 +50,7 @@ public class UserController {
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
-    @GetMapping(value = "api/user/{name}")
+    @GetMapping(value = "api/user/{userName}")
     public @ResponseBody DeferredResult<ResponseEntity> retrieve(final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
@@ -74,8 +74,8 @@ public class UserController {
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
-    @PutMapping(value = "api/user/{name}")
-    @PreAuthorize("#user.name == userName")
+    @PutMapping(value = "api/user/{userName}")
+    @PreAuthorize("#user.name == #userName")
     public @ResponseBody DeferredResult<ResponseEntity> update(final @RequestBody @Valid User user,
                                                                final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
@@ -99,7 +99,7 @@ public class UserController {
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
-    @DeleteMapping(value = "api/user/{name}")
+    @DeleteMapping(value = "api/user/{userName}")
     public @ResponseBody DeferredResult<ResponseEntity> delete(final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
