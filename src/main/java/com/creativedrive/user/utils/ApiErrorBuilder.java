@@ -25,7 +25,8 @@ public class ApiErrorBuilder {
         ApiError error = new ApiError();
 
         // Pick cause
-        if(throwable.getCause() instanceof UserException) {
+        Throwable cause = throwable.getCause();
+        if((throwable instanceof UserException) || (cause instanceof  UserException)) {
             UserException exception = (UserException) throwable.getCause();
             error.setMessage(exception.getMessage());
             error.setStatus(translateError(exception.getError()));

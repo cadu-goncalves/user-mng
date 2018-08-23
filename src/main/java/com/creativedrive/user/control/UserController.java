@@ -38,7 +38,7 @@ public class UserController {
                 (result, throwable) -> {
                     if (throwable != null) {
                         ApiError error = ApiErrorBuilder.build(throwable);
-                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
+                        response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.CREATED));
                     }
@@ -62,7 +62,7 @@ public class UserController {
                 (result, throwable) -> {
                     if (throwable != null) {
                          ApiError error = ApiErrorBuilder.build(throwable);
-                         response.setResult(new ResponseEntity<>(error, error.getStatus()));
+                         response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.OK));
                     }
@@ -89,7 +89,7 @@ public class UserController {
                 (result, throwable) -> {
                     if (throwable != null) {
                         ApiError error = ApiErrorBuilder.build(throwable);
-                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
+                        response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.OK));
                     }
@@ -113,7 +113,7 @@ public class UserController {
                 (result, throwable) -> {
                     if (throwable != null) {
                         ApiError error = ApiErrorBuilder.build(throwable);
-                        response.setResult(new ResponseEntity<>(error, error.getStatus()));
+                        response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(HttpStatus.OK));
                     }
