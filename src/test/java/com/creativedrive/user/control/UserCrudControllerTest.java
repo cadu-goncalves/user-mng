@@ -36,13 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+public class UserCrudControllerTest {
 
     @MockBean
     private UserService mockService;
 
     @Autowired
-    private UserController controller;
+    private UserCrudController controller;
 
     @Autowired
     private MockMvc mockMvc;

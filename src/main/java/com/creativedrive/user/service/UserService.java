@@ -1,9 +1,6 @@
 package com.creativedrive.user.service;
 
-import com.creativedrive.user.domain.CrudError;
-import com.creativedrive.user.domain.User;
-import com.creativedrive.user.domain.UserException;
-import com.creativedrive.user.domain.UserProfile;
+import com.creativedrive.user.domain.*;
 import com.creativedrive.user.persistence.UserRepository;
 import com.creativedrive.user.utils.MessageUtils;
 import org.jasypt.util.password.PasswordEncryptor;
@@ -13,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+
+import static org.springframework.data.domain.ExampleMatcher.StringMatcher;
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 /**
  * User service implementation.
@@ -159,6 +163,35 @@ public class UserService {
     }
 
     /**
+     * Find existing users based defined filter.
+     *
+     * @param filter {@link UserFilter} filter values
+     * @return {@link CompletableFuture<Page<User>>}
+     */
+    @Secured({UserProfile.ADMIN, UserProfile.USER})
+    public CompletableFuture<UserPage> findUsers(final UserFilter filter) {
+        return CompletableFuture.supplyAsync(() -> {
+            LOGGER.info("Search users: " + filter.toString());
+
+            // Filter by example (basic approach)
+            Example<User> example = Example.of(filter.getFields(),
+                    matching().withStringMatcher(StringMatcher.REGEX)
+            );
+
+            // Sort & paginate
+            Sort sort = Sort.by(filter.getOrders());
+            PageRequest reqPage = PageRequest.of(filter.getPage(), filter.getSize(), sort);
+
+            // Find
+            Page<User> page = userRepo.findAll(example, reqPage);
+            return new UserPage(page.getTotalPages(), page.getNumber(), page.getContent());
+        }, executor).exceptionally(throwable -> {
+            LOGGER.error(throwable.getMessage());
+            throw translateException(throwable);
+        });
+    }
+
+    /**
      * Translate relevant exceptions into {@link UserException}
      *
      * @param throwable {@link Throwable} original exception
@@ -169,7 +202,7 @@ public class UserService {
         UserException exception;
 
         // Unwrap
-        if(throwable instanceof CompletionException) {
+        if (throwable instanceof CompletionException) {
             throwable = throwable.getCause();
         }
 

@@ -77,7 +77,7 @@ public class WebSecurityConfig extends GlobalMethodSecurityConfiguration {
 
         public static final String BASE_URI = "/api/**/";
 
-        private static final String[] ENDPOINTS = new String[]{"/user/**/"};
+        private static final String[] ENDPOINTS = new String[]{"/user/**/", "/users/**/"};
 
         protected void configure(HttpSecurity http) throws Exception {
             // Auth matchers

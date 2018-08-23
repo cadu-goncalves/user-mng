@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * User API controller
+ * User CRUD API controller
  */
 @Api(authorizations = {@Authorization(value = "BasicAuth")})
 @RestController
@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE
 })
-public class UserController {
+public class UserCrudController {
 
     @Autowired
     private UserService userService;
