@@ -32,7 +32,7 @@ public final class User {
     @Indexed(unique = true)
     @NotNull(message = "{user.name.null}")
     @NotBlank(message = "{user.name.null}")
-    @Size(min = 5, max = 25, message = "{user.name.size}")
+    @Size(min = 4, max = 25, message = "{user.name.size}")
     @Pattern(regexp = "^[\\S]*$", message = "{user.name.format}")
     private String name;
 

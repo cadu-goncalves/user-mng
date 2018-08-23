@@ -11,5 +11,11 @@ public enum CrudError {
 
     UPDATE_ERROR,
 
-    DELETE_ERROR
+    DELETE_ERROR,
+
+    CONSTRAINT_ERROR,
+
+    IO_ERROR,
+
+    ERROR
 }

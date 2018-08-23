@@ -12,6 +12,11 @@ public class UserException extends RuntimeException {
         this.error = error;
     }
 
+    public UserException(String message, Throwable cause, CrudError error) {
+        super(message, cause);
+        this.error = error;
+    }
+
     public CrudError getError() {
         return error;
     }

@@ -11,12 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * User service implementation.
@@ -55,9 +58,13 @@ public class UserService {
 
             // Encrypt password and save
             user.setPassword(encryptor.encryptPassword(user.getPassword()));
+            user.setId(null);
             userRepo.save(user);
             return user;
-        }, executor);
+        }, executor).exceptionally(throwable -> {
+            LOGGER.error(throwable.getMessage());
+            throw translateException(throwable);
+        });
     }
 
     /**
@@ -72,7 +79,6 @@ public class UserService {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Retrieve user: " + userName);
 
-            // Encrypt password and save
             Optional<User> findResult = userRepo.findByName(userName);
             if (!findResult.isPresent()) {
                 // Not found
@@ -81,7 +87,10 @@ public class UserService {
             }
 
             return findResult.get();
-        }, executor);
+        }, executor).exceptionally(throwable -> {
+            LOGGER.error(throwable.getMessage());
+            throw translateException(throwable);
+        });
     }
 
     /**
@@ -119,7 +128,10 @@ public class UserService {
             // Save
             userRepo.save(user);
             return user;
-        }, executor);
+        }, executor).exceptionally(throwable -> {
+            LOGGER.error(throwable.getMessage());
+            throw translateException(throwable);
+        });
     }
 
     /**
@@ -140,6 +152,41 @@ public class UserService {
             if (findResult.isPresent()) {
                 userRepo.delete(findResult.get());
             }
-        }, executor);
+        }, executor).exceptionally(throwable -> {
+            LOGGER.error(throwable.getMessage());
+            throw translateException(throwable);
+        });
     }
+
+
+    /**
+     * Translate relevant exceptions into {@link UserException}
+     *
+     * @param throwable {@link Throwable} original exception
+     * @return {@link UserException}
+     */
+    private UserException translateException(Throwable throwable) {
+        String message;
+        UserException exception;
+
+        // Unwrap
+        if(throwable instanceof CompletionException) {
+            throwable = throwable.getCause();
+        }
+
+        // Check
+        if (throwable instanceof DataIntegrityViolationException) {
+            message = MessageUtils.getMessage("messages", "user.constraint.error");
+            exception = new UserException(message, throwable, CrudError.CONSTRAINT_ERROR);
+        } else if (throwable instanceof DataAccessException) {
+            message = MessageUtils.getMessage("messages", "user.access.error");
+            exception = new UserException(message, throwable, CrudError.IO_ERROR);
+        } else {
+            message = MessageUtils.getMessage("messages", "error");
+            exception = new UserException(message, throwable, CrudError.ERROR);
+        }
+
+        return exception;
+    }
+
 }
