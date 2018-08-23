@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link com.creativedrive.user.service.LoginService}
+ * Tests for {@link LoginService}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

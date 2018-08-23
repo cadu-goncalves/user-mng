@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * User repository tests
+ * UTests for {@link UserRepository}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

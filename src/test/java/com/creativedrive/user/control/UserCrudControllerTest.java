@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 /**
- * User controller tests
+ * Tests for {@link UserCrudController}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
