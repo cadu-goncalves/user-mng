@@ -36,6 +36,9 @@ public final class UserFilter {
     private transient Boolean locked = Boolean.FALSE;
 
     public Integer getPage() {
+        if(page == null) {
+            page = 0;
+        }
         return page;
     }
 
@@ -47,6 +50,9 @@ public final class UserFilter {
     }
 
     public Integer getSize() {
+        if(size == null) {
+            size = 10;
+        }
         return size;
     }
 
@@ -58,6 +64,9 @@ public final class UserFilter {
     }
 
     public User getFields() {
+        if(fields == null) {
+            fields = new User();
+        }
         return fields;
     }
 

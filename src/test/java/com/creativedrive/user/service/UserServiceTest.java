@@ -1,8 +1,6 @@
 package com.creativedrive.user.service;
 
-import com.creativedrive.user.domain.User;
-import com.creativedrive.user.domain.UserException;
-import com.creativedrive.user.domain.UserProfile;
+import com.creativedrive.user.domain.*;
 import com.creativedrive.user.persistence.UserRepository;
 import org.jasypt.util.password.PasswordEncryptor;
 import org.junit.Assert;
@@ -13,13 +11,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -250,5 +252,39 @@ public class UserServiceTest {
 
         // Test (must throw exception)
         userService.delete("user").get();
+    }
+
+
+    /**
+     * Test scenario for user search
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(authorities = {UserProfile.ADMIN})
+    public void itSearchesUsers() throws Exception {
+        // Input fixtures
+        UserFilter filter = new UserFilter();
+        filter.setPage(2);
+        filter.setSize(12);
+        filter.setFields(user);
+        PageRequest reqPage = PageRequest.of(filter.getPage(), filter.getSize(), Sort.unsorted());
+
+        // Output fixtures
+        List<User> content = new ArrayList<>();
+        content.add(user);
+        Page page = new PageImpl(content, reqPage, 1);
+
+        //  Mock behaviours
+        when(mockRepo.findAll(any(Example.class), eq(reqPage))).thenReturn(page);
+
+        // Test
+        UserPage result = userService.findUsers(filter).get();
+        assertThat(result.getContent(), hasItem(user));
+        assertThat(result.getNumber(), equalTo(filter.getPage()));
+        assertThat(result.getTotalPages(), equalTo(page.getTotalPages()));
+
+        // Check mock iteration
+        verify(mockRepo).findAll(any(Example.class), eq(reqPage));
     }
 }
