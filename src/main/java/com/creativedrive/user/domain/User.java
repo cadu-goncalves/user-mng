@@ -50,7 +50,7 @@ public final class User {
     private String password;
 
     @Field
-    @Max(value = 255, message = "{user.address.size}")
+    @Size(max = 255, message = "{user.address.size}")
     private String address;
 
     @Field
