@@ -158,7 +158,6 @@ public class UserService {
         });
     }
 
-
     /**
      * Translate relevant exceptions into {@link UserException}
      *
@@ -175,7 +174,10 @@ public class UserService {
         }
 
         // Check
-        if (throwable instanceof DataIntegrityViolationException) {
+        if (throwable instanceof UserException) {
+            // Nothing to do
+            return (UserException) throwable;
+        } else if (throwable instanceof DataIntegrityViolationException) {
             message = MessageUtils.getMessage("messages", "user.constraint.error");
             exception = new UserException(message, throwable, CrudError.CONSTRAINT_ERROR);
         } else if (throwable instanceof DataAccessException) {
