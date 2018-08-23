@@ -4,8 +4,12 @@ import com.creativedrive.user.domain.ApiError;
 import com.creativedrive.user.domain.User;
 import com.creativedrive.user.service.UserService;
 import com.creativedrive.user.utils.ApiErrorBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +21,9 @@ import java.util.concurrent.CompletableFuture;
 /**
  * User API controller
  */
+@Api(authorizations = {@Authorization(value = "BasicAuth")})
 @RestController
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     @Autowired
@@ -29,8 +35,10 @@ public class UserController {
      * @param user {@link User} from request body
      * @return {@link DeferredResult} for chunked HTTP response
      */
+    @ApiOperation(value = "Create new user", response = User.class)
     @PostMapping("api/user")
-    public @ResponseBody DeferredResult<ResponseEntity> create(final @RequestBody @Valid User user) {
+    public @ResponseBody
+    DeferredResult<ResponseEntity> create(final @RequestBody @Valid User user) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
         CompletableFuture<User> future = userService.create(user);
@@ -53,16 +61,18 @@ public class UserController {
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
+    @ApiOperation(value = "Retrieve user", response = User.class)
     @GetMapping(value = "api/user/{userName}")
-    public @ResponseBody DeferredResult<ResponseEntity> retrieve(final @PathVariable String userName) {
+    public @ResponseBody
+    DeferredResult<ResponseEntity> retrieve(final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
         CompletableFuture<User> future = userService.retrieve(userName);
         future.whenCompleteAsync(
                 (result, throwable) -> {
                     if (throwable != null) {
-                         ApiError error = ApiErrorBuilder.build(throwable);
-                         response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
+                        ApiError error = ApiErrorBuilder.build(throwable);
+                        response.setErrorResult(new ResponseEntity<>(error, error.getStatus()));
                     } else {
                         response.setResult(new ResponseEntity<>(result, HttpStatus.OK));
                     }
@@ -74,14 +84,16 @@ public class UserController {
     /**
      * User update endpoint
      *
-     * @param user {@link User} from request body
+     * @param user     {@link User} from request body
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
-    @PutMapping(value = "api/user/{userName}")
+    @ApiOperation(value = "Update user", response = User.class)
     @PreAuthorize("#user.name == #userName")
-    public @ResponseBody DeferredResult<ResponseEntity> update(final @RequestBody @Valid User user,
-                                                               final @PathVariable String userName) {
+    @PutMapping(value = "api/user/{userName}")
+    public @ResponseBody
+    DeferredResult<ResponseEntity> update(final @RequestBody @Valid User user,
+                                          final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
         CompletableFuture<User> future = userService.update(user);
@@ -104,8 +116,10 @@ public class UserController {
      * @param userName {@link String} from URI path
      * @return {@link DeferredResult} for chunked HTTP response
      */
+    @ApiOperation(value = "Delete user")
     @DeleteMapping(value = "api/user/{userName}")
-    public @ResponseBody DeferredResult<ResponseEntity> delete(final @PathVariable String userName) {
+    public @ResponseBody
+    DeferredResult<ResponseEntity> delete(final @PathVariable String userName) {
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
         CompletableFuture<Void> future = userService.delete(userName);

@@ -21,6 +21,7 @@
 
 	<properties>
 		<framework.jasypt.version>1.9.2</framework.jasypt.version>
+        <framework.swagger.version>2.7.0</framework.swagger.version>
 		<framework.mongobee.version>0.13</framework.mongobee.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,7 +83,24 @@
 			<version>${framework.mongobee.version}</version>
 		</dependency>
 
-		<!-- Test -->
+		<!-- Swagger (Automated Api Documentation) -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${framework.swagger.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${framework.swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${framework.swagger.version}</version>
+        </dependency>
+
+        <!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

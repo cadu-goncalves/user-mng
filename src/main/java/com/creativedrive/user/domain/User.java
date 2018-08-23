@@ -1,6 +1,7 @@
 package com.creativedrive.user.domain;
 
 import com.creativedrive.user.domain.validation.Profile;
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,7 @@ import java.util.Objects;
  *
  * @see https://docs.spring.io/spring-data/mongodb/docs/2.0.9.RELEASE/reference/html/#mapping-chapter
  */
+@ApiModel
 @Document(collection = "users")
 public final class User {
 
@@ -22,22 +24,27 @@ public final class User {
     private String id;
 
     @Field
+    @NotNull(message = "{user.profile.null}")
     @Profile(message = "{user.profile.value}")
     private String profile;
 
     @Field
     @Indexed(unique = true)
+    @NotNull(message = "{user.name.null}")
     @NotBlank(message = "{user.name.null}")
     @Size(min = 5, max = 25, message = "{user.name.size}")
+    @Pattern(regexp = "^[\\S]*$", message = "{user.name.format}")
     private String name;
 
     @Field
     @Indexed(unique = true)
+    @NotNull(message = "{user.email.null}")
     @NotBlank(message = "{user.email.null}")
     @Email(message = "{user.email.format}")
     private String email;
 
     @Field
+    @NotNull(message = "{user.password.null}")
     @NotBlank(message = "{user.password.null}")
     @Size(min = 6, max = 128, message = "{user.password.size}")
     private String password;
