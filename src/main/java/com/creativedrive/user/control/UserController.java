@@ -23,7 +23,10 @@ import java.util.concurrent.CompletableFuture;
  */
 @Api(authorizations = {@Authorization(value = "BasicAuth")})
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE
+})
 public class UserController {
 
     @Autowired
