@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link com.creativedrive.user.service.UserService}
+ * Tests for {@link UserService}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

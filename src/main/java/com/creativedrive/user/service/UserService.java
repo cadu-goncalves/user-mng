@@ -2,6 +2,7 @@ package com.creativedrive.user.service;
 
 import com.creativedrive.user.domain.*;
 import com.creativedrive.user.persistence.UserRepository;
+import com.creativedrive.user.utils.FilterUtils;
 import com.creativedrive.user.utils.MessageUtils;
 import org.jasypt.util.password.PasswordEncryptor;
 import org.slf4j.Logger;
@@ -171,15 +172,17 @@ public class UserService {
     @Secured({UserProfile.ADMIN, UserProfile.USER})
     public CompletableFuture<UserPage> findUsers(final UserFilter filter) {
         return CompletableFuture.supplyAsync(() -> {
-            LOGGER.info("Search users: " + filter.toString());
+            LOGGER.info("Search users: ");
 
             // Filter by example (basic approach)
             Example<User> example = Example.of(filter.getFields(),
                     matching().withStringMatcher(StringMatcher.REGEX)
             );
 
-            // Sort & paginate
-            Sort sort = Sort.by(filter.getOrders());
+            // Sort
+            Sort sort = FilterUtils.buildSort(filter);
+
+            // Paginate
             PageRequest reqPage = PageRequest.of(filter.getPage(), filter.getSize(), sort);
 
             // Find
@@ -190,6 +193,7 @@ public class UserService {
             throw translateException(throwable);
         });
     }
+
 
     /**
      * Translate relevant exceptions into {@link UserException}
