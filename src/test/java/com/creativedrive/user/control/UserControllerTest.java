@@ -224,7 +224,7 @@ public class UserControllerTest {
     public void itHandlesGetUserError() throws Exception {
         // Mock behaviours
         final CompletableFuture<User> future = CompletableFuture.supplyAsync(() -> {
-            throw new UserException("get error", CrudError.CREATE_ERROR);
+            throw new UserException("get error", CrudError.RETRIEVE_ERROR);
         });
         when(mockService.retrieve(user.getName())).thenReturn(future);
 
@@ -239,7 +239,7 @@ public class UserControllerTest {
         // Check
         mockMvc.perform(asyncDispatch(result))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString("get error")));
 
         // Check mock iteration
@@ -289,7 +289,7 @@ public class UserControllerTest {
     public void itHandlesPutUserError() throws Exception {
         // Mock behaviours
         final CompletableFuture<User> future = CompletableFuture.supplyAsync(() -> {
-            throw new UserException("put error", CrudError.CREATE_ERROR);
+            throw new UserException("put error", CrudError.UPDATE_ERROR);
         });
         when(mockService.update(user)).thenReturn(future);
 
@@ -352,7 +352,7 @@ public class UserControllerTest {
     public void itHandlesDeleteUserError() throws Exception {
         // Mock behaviours
         final CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            throw new UserException("delete error", CrudError.CREATE_ERROR);
+            throw new UserException("delete error", CrudError.DELETE_ERROR);
         });
         when(mockService.delete(user.getName())).thenReturn(future);
 
@@ -367,7 +367,7 @@ public class UserControllerTest {
         // Check
         mockMvc.perform(asyncDispatch(result))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString("delete error")));
 
         // Check mock iteration
