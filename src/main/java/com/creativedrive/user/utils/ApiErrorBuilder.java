@@ -29,10 +29,10 @@ public class ApiErrorBuilder {
         // Pick cause
         if(isCauseUserException(throwable)) {
             UserException exception = (UserException) throwable.getCause();
-            error.setMessage(exception.getMessage());
+            error.addMessage(exception.getMessage());
             error.setStatus(translateError(exception.getError()));
         } else {
-            error.setMessage(MessageUtils.getMessage("messages", "error"));
+            error.addMessage(MessageUtils.getMessage("messages", "error"));
             error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
