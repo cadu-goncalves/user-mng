@@ -1,5 +1,7 @@
 ## Description
 
+[![CircleCI](https://circleci.com/gh/cadu-goncalves/user-mng/tree/master.svg?style=svg)](https://circleci.com/gh/cadu-goncalves/user-mng/tree/master)
+
 User management microservice with following features:
 
 - CRUD endpoints 
