@@ -11,7 +11,7 @@ jobs:
     working_directory: ~/project
 
     docker:
-    - image: openjdk:8-jdk-alpine # primary (where steps run)
+    - image: maven:3-jdk-8-alpine # primary (where steps run)
     - image: circleci/mongo:4.0.1-xenial
 
     environment:
