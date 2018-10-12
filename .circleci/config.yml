@@ -34,10 +34,12 @@ jobs:
         key: user-mng-dependencies-{{ checksum "pom.xml" }}
 
     # run tests
-    - run: mvn clean test
+    - run: mvn clean package
 
     # store outcomes
     - store_test_results:
+        path: target/surefire-reports
+    - store_artifacts:
         path: target/surefire-reports
     - store_artifacts:
         path: target/user-mng-1.0-SNAPSHOT.jar
