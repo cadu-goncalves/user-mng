@@ -1,0 +1,48 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+
+jobs:
+  build:
+
+    # directory where steps will run
+    working_directory: ~/project
+
+    docker:
+    - image: openjdk:8-jdk-alpine # primary (where steps run)
+    - image: circleci/mongo:4.0.1-xenial
+
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+    # check out source code
+    - checkout
+
+    # download & cache dependencies
+    - restore_cache:
+        keys:
+        - user-mng-dependencies-{{ checksum "pom.xml" }}
+
+    - run: mvn dependency:go-offline
+
+    - save_cache:
+        paths:
+        - ~/.m2
+        key: user-mng-dependencies-{{ checksum "pom.xml" }}
+
+    # run tests
+    - run: mvn clean test
+
+    # store the uberjar as an artifact
+    - store_artifacts:
+        path: target/user-mng-1.0-SNAPSHOT.jar
+
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+    - build
